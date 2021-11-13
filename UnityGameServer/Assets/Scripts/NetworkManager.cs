@@ -7,6 +7,8 @@ public class NetworkManager : MonoBehaviour
     public static NetworkManager instance;
 
     public GameObject playerPrefab;
+    public GameObject obstaclePrefab;
+
 
     private void Awake()
     {
@@ -37,5 +39,11 @@ public class NetworkManager : MonoBehaviour
     public Player InstantiatePlayer()
     {
         return Instantiate(playerPrefab, new Vector3(0f, 0.5f, 0f), Quaternion.identity).GetComponent<Player>();
+    }
+
+    public Obstacle InstantiateObstacle(Transform _spawnOrigin)
+    {
+        return Instantiate(obstaclePrefab, _spawnOrigin.position, Quaternion.identity).GetComponent<Obstacle>();
+        //TO DO: random position rotation and scaleMultiplier
     }
 }

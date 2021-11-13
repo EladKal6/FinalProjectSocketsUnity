@@ -138,5 +138,38 @@ public class ServerSend
             SendTCPDataToAll(_packet);
         }
     }
+
+    public static void SpawnObstacle(Obstacle _obstacle)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.spawnObstacle))
+        {
+            _packet.Write(_obstacle.id);
+            _packet.Write(_obstacle.transform.position);
+
+            SendTCPDataToAll(_packet);
+        }
+    }
+
+    public static void ObstaclePosition(Obstacle _obstacle)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.obstaclePosition))
+        {
+            _packet.Write(_obstacle.id);
+            _packet.Write(_obstacle.transform.position);
+
+            SendTCPDataToAll(_packet);
+        }
+    }
+
+    public static void ObstacleDestroyed(Obstacle _obstacle)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.obstacleDestroyed))
+        {
+            _packet.Write(_obstacle.id);
+            _packet.Write(_obstacle.transform.position);
+
+            SendTCPDataToAll(_packet);
+        }
+    }
     #endregion
 }

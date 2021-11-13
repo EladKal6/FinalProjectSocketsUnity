@@ -7,9 +7,13 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public static Dictionary<int, PlayerManager> players = new Dictionary<int, PlayerManager>();
+    public static Dictionary<int, ObstacleManager> obstacles = new Dictionary<int, ObstacleManager>();
+
 
     public GameObject localPlayerPrefab;
     public GameObject playerPrefab;
+    public GameObject obstaclePrefab;
+
     private void Awake()
     {
         if (instance == null)
@@ -38,5 +42,12 @@ public class GameManager : MonoBehaviour
         _player.GetComponent<PlayerManager>().id = _id;
         _player.GetComponent<PlayerManager>().username = _username;
         players.Add(_id, _player.GetComponent<PlayerManager>());
+    }
+
+    public void SpawnObstacle(int _id, Vector3 _position)
+    {
+        GameObject _obstacle = Instantiate(obstaclePrefab, _position, Quaternion.identity);
+        _obstacle.GetComponent<ObstacleManager>().Initialize(_id);
+        obstacles.Add(_id, _obstacle.GetComponent<ObstacleManager>());
     }
 }

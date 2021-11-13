@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemSpawnerScript : MonoBehaviour
+public class ObstacleSpawnerScript : MonoBehaviour
 {
     //IF THIS STARTS BUGGING UNCOMMENT THE NEXT LINES
     //private MeshFilter a;
@@ -11,7 +11,7 @@ public class ItemSpawnerScript : MonoBehaviour
     //THE BUGS MAY BE CAUSED BECAUSE THE PROJECT DOESN'T REFRENCE THESE CLASSES
 
     public GameObject obs;
-    private GameObject CurrentObs;
+    public float initialeForceStrength;
     public bool stopSpawning = false;
     public float spawnTime;
     public float spawnDelay;
@@ -24,8 +24,10 @@ public class ItemSpawnerScript : MonoBehaviour
 
     public void SpawnObject()
     {
-        CurrentObs = Instantiate(obs, transform.position, transform.rotation);
-        CurrentObs.transform.localScale = new Vector3(Random.Range(0.1f, 1f), Random.Range(1, 5), Random.Range(1, 20));
+        Vector3 scaleMultiplier = new Vector3(Random.Range(0.1f, 1f), Random.Range(1, 5), Random.Range(1, 20));
+        Obstacle currentObs = NetworkManager.instance.InstantiateObstacle(transform);
+        Debug.Log(currentObs);
+        currentObs.Initialize(scaleMultiplier, initialeForceStrength);
         if (stopSpawning)
         {
             CancelInvoke("SpawnObject");

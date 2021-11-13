@@ -50,4 +50,28 @@ public class ClientHandle : MonoBehaviour
         Destroy(GameManager.players[_id].gameObject);
         GameManager.players.Remove(_id);
     }
+
+    public static void SpawnObstacle(Packet _packet)
+    {
+        int _obstacleId = _packet.ReadInt();
+        Vector3 _position = _packet.ReadVector3();
+
+        GameManager.instance.SpawnObstacle(_obstacleId, _position);
+    }
+
+    public static void ObstaclePosition(Packet _packet)
+    {
+        int _obstacleId = _packet.ReadInt();
+        Vector3 _position = _packet.ReadVector3();
+
+        GameManager.obstacles[_obstacleId].transform.position = _position;
+    }
+
+    public static void ObstacleDestroyed(Packet _packet)
+    {
+        int _obstacleId = _packet.ReadInt();
+        Vector3 _position = _packet.ReadVector3();
+
+        GameManager.obstacles[_obstacleId].Destroy(_position);
+    }
 }
