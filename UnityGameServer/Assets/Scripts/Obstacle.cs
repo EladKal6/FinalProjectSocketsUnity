@@ -20,7 +20,7 @@ public class Obstacle : MonoBehaviour
 
         ServerSend.SpawnObstacle(this);
 
-        rigidBody.AddForce(initialForce);
+        rigidBody.velocity = initialForce;
         StartCoroutine(DestroyAfterTime());
     }
 

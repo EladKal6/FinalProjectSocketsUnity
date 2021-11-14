@@ -382,7 +382,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1866603153}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 25, y: 2.5, z: -7.75}
+  m_LocalPosition: {x: -25, y: 2.5, z: -7.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -401,10 +401,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obs: {fileID: 5950465055480279419, guid: 5e7db072a2f3b24478bd554d900602f5, type: 3}
-  CurrentObs: {fileID: 0}
+  initialeForceStrength: 60
   stopSpawning: 0
   spawnTime: 1
-  spawnDelay: 4
+  spawnDelay: 2
 --- !u!1001 &4978323330440078629
 PrefabInstance:
   m_ObjectHideFlags: 0

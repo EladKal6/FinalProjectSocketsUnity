@@ -64,7 +64,9 @@ public class ClientHandle : MonoBehaviour
         int _obstacleId = _packet.ReadInt();
         Vector3 _position = _packet.ReadVector3();
 
-        GameManager.obstacles[_obstacleId].transform.position = _position;
+        ObstacleManager currentObs = GameManager.obstacles[_obstacleId];
+        Debug.Log(currentObs);
+        currentObs.transform.position = _position;
     }
 
     public static void ObstacleDestroyed(Packet _packet)

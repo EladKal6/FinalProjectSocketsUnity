@@ -154,6 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   localPlayerPrefab: {fileID: 9079535624499038733, guid: de19b8b8ef422ef4e9766e2265ca2a6a, type: 3}
   playerPrefab: {fileID: 9079535624499038733, guid: a7b27fe425f4c8a45bbfa150296770ef, type: 3}
+  obstaclePrefab: {fileID: 5950465055480279419, guid: ff203fa543a341545bac06e52fc320cf, type: 3}
 --- !u!4 &223974228
 Transform:
   m_ObjectHideFlags: 0

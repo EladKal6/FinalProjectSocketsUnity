@@ -25,9 +25,7 @@ public class ObstacleSpawnerScript : MonoBehaviour
     public void SpawnObject()
     {
         Vector3 scaleMultiplier = new Vector3(Random.Range(0.1f, 1f), Random.Range(1, 5), Random.Range(1, 20));
-        Obstacle currentObs = NetworkManager.instance.InstantiateObstacle(transform);
-        Debug.Log(currentObs);
-        currentObs.Initialize(scaleMultiplier, initialeForceStrength);
+        NetworkManager.instance.InstantiateObstacle(transform).Initialize(scaleMultiplier, initialeForceStrength);
         if (stopSpawning)
         {
             CancelInvoke("SpawnObject");

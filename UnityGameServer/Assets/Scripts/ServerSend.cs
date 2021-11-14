@@ -146,6 +146,7 @@ public class ServerSend
             _packet.Write(_obstacle.id);
             _packet.Write(_obstacle.transform.position);
 
+            Debug.Log("Spawn Obstacle");
             SendTCPDataToAll(_packet);
         }
     }
@@ -157,6 +158,7 @@ public class ServerSend
             _packet.Write(_obstacle.id);
             _packet.Write(_obstacle.transform.position);
 
+            Debug.Log("Change Obstacle Position");
             SendTCPDataToAll(_packet);
         }
     }
