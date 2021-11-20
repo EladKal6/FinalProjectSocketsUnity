@@ -13,8 +13,19 @@ public class ObstacleManager : MonoBehaviour
 
     public void Destroy(Vector3 _position)
     {
-        transform.position = _position;
+        transform.position.Set(_position.x, _position.y, _position.z);
         GameManager.obstacles.Remove(id);
         Destroy(gameObject);
+    }
+
+    public void ChangePosition(Vector3 _position)
+    {
+        Debug.Log(id + " " + _position);
+        transform.position = _position;
+    }
+
+    public override string ToString()
+    {
+        return id + "--" + transform.position;
     }
 }

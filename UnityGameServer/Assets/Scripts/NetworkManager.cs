@@ -41,9 +41,13 @@ public class NetworkManager : MonoBehaviour
         return Instantiate(playerPrefab, new Vector3(0f, 0.5f, 0f), Quaternion.identity).GetComponent<Player>();
     }
 
-    public Obstacle InstantiateObstacle(Transform _spawnOrigin)
+    public Obstacle InstantiateObstacle(Transform _spawnOrigin, Vector3 _scaleMultiplier, Vector3 _positionOffsetMultiplier)
     {
-        return Instantiate(obstaclePrefab, _spawnOrigin.position, Quaternion.identity).GetComponent<Obstacle>();
-        //TO DO: random position rotation and scaleMultiplier
+        GameObject obs = Instantiate(obstaclePrefab, _spawnOrigin.position, Quaternion.identity);
+        Debug.Log(obs.transform.localScale + "   " + _positionOffsetMultiplier + "   " + Vector3.Scale(obs.transform.localScale, _positionOffsetMultiplier));
+        obs.transform.position += Vector3.Scale(obs.transform.localScale, _positionOffsetMultiplier);
+
+        obs.transform.localScale =  Vector3.Scale(obs.transform.localScale, _scaleMultiplier);
+        return obs.GetComponent<Obstacle>();
     }
 }

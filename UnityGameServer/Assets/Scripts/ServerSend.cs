@@ -157,8 +157,9 @@ public class ServerSend
         {
             _packet.Write(_obstacle.id);
             _packet.Write(_obstacle.transform.position);
+            _packet.Write(_obstacle.transform.localScale);
 
-            Debug.Log("Change Obstacle Position");
+            Debug.Log(_obstacle.id + " " + _obstacle.transform.position);
             SendTCPDataToAll(_packet);
         }
     }

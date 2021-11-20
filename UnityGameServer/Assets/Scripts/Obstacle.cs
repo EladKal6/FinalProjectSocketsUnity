@@ -8,8 +8,6 @@ public class Obstacle : MonoBehaviour
     private static int nextObstacleId = 1;
 
     public int id;
-    public Rigidbody rigidBody;
-    public Vector3 scaleMultiplier;
     public Vector3 initialForce;
 
     private void Start()
@@ -20,18 +18,17 @@ public class Obstacle : MonoBehaviour
 
         ServerSend.SpawnObstacle(this);
 
-        rigidBody.velocity = initialForce;
         StartCoroutine(DestroyAfterTime());
     }
 
-    public void Initialize(Vector3 _scaleMultiplier, float _initialForceStrength)
+    public void Initialize(float _initialForceStrength)
     {
         initialForce = Vector3.right * _initialForceStrength;
-        scaleMultiplier = _scaleMultiplier;
     }
 
     private void FixedUpdate()
     {
+        transform.position += initialForce;
         ServerSend.ObstaclePosition(this);
     }
 

@@ -55,8 +55,9 @@ public class ClientHandle : MonoBehaviour
     {
         int _obstacleId = _packet.ReadInt();
         Vector3 _position = _packet.ReadVector3();
+        Vector3 _scale = _packet.ReadVector3();
 
-        GameManager.instance.SpawnObstacle(_obstacleId, _position);
+        GameManager.instance.SpawnObstacle(_obstacleId, _position, _scale);
     }
 
     public static void ObstaclePosition(Packet _packet)
@@ -64,9 +65,16 @@ public class ClientHandle : MonoBehaviour
         int _obstacleId = _packet.ReadInt();
         Vector3 _position = _packet.ReadVector3();
 
-        ObstacleManager currentObs = GameManager.obstacles[_obstacleId];
-        Debug.Log(currentObs);
-        currentObs.transform.position = _position;
+        try
+        {
+            GameManager.obstacles[_obstacleId].ChangePosition(_position);
+        }
+        catch (KeyNotFoundException)
+        {
+            Vector3 _scale = _packet.ReadVector3();
+            GameManager.instance.SpawnObstacle(_obstacleId, _position, _scale);
+        }
+
     }
 
     public static void ObstacleDestroyed(Packet _packet)

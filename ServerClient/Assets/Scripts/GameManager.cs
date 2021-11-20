@@ -44,9 +44,10 @@ public class GameManager : MonoBehaviour
         players.Add(_id, _player.GetComponent<PlayerManager>());
     }
 
-    public void SpawnObstacle(int _id, Vector3 _position)
+    public void SpawnObstacle(int _id, Vector3 _position, Vector3 _scale)
     {
         GameObject _obstacle = Instantiate(obstaclePrefab, _position, Quaternion.identity);
+        _obstacle.transform.localScale = _scale;
         _obstacle.GetComponent<ObstacleManager>().Initialize(_id);
         obstacles.Add(_id, _obstacle.GetComponent<ObstacleManager>());
     }

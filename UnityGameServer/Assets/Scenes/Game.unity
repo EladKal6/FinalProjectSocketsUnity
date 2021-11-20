@@ -401,7 +401,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obs: {fileID: 5950465055480279419, guid: 5e7db072a2f3b24478bd554d900602f5, type: 3}
-  initialeForceStrength: 60
+  initialeForceStrength: 0.1
   stopSpawning: 0
   spawnTime: 1
   spawnDelay: 2

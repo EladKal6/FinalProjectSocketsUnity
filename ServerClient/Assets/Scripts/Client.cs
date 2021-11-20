@@ -41,6 +41,7 @@ public class Client : MonoBehaviour
 
     private void OnApplicationQuit()
     {
+        Debug.Log(string.Join(Environment.NewLine, GameManager.obstacles));
         Disconnect();
     }
 
@@ -149,14 +150,6 @@ public class Client : MonoBehaviour
                     using (Packet _packet = new Packet(_packetBytes))
                     {
                         int _packetId = _packet.ReadInt();
-                        if (_packetId == (int)ServerPackets.spawnObstacle)
-                        {
-                            Debug.Log("REQUEST TO SPAWN OBST");
-                        }
-                        if (_packetId == (int)ServerPackets.obstaclePosition)
-                        {
-                            Debug.Log("REQUEST TO CHANGE POSITION");
-                        }
                         packetHandlers[_packetId](_packet);
                     }
                 });
