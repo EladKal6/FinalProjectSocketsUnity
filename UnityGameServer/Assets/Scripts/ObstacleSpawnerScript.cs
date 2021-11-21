@@ -12,6 +12,7 @@ public class ObstacleSpawnerScript : MonoBehaviour
 
     public GameObject obs;
     public float initialeForceStrength;
+    public float initialeForceStrengthOffset;
     public bool stopSpawning = false;
     public float spawnTime;
     public float spawnDelay;
@@ -22,14 +23,29 @@ public class ObstacleSpawnerScript : MonoBehaviour
         InvokeRepeating("SpawnObject", spawnTime, spawnDelay);
     }
 
+    public Vector3 RandomPositionOffsetMultiplier(Vector3 _scaleMultiplier)
+    {
+        float yWiggleRoom = (1 - _scaleMultiplier.y) / 2;
+        float zWiggleRoom = (1 - _scaleMultiplier.z) / 2;
+        float randomYWiggleRoom, randomZWiggleRoom;
+        float randomYIndex = Random.Range(0f,1f);
+        float randomZIndex = Random.Range(0f,1f);
+        if(randomYIndex < 0.4f){randomYWiggleRoom = Random.Range(-yWiggleRoom, -yWiggleRoom / 2);}
+        else if (randomYIndex > 0.6f){randomYWiggleRoom = Random.Range(yWiggleRoom / 2, yWiggleRoom);}
+        else{randomYWiggleRoom = Random.Range(-yWiggleRoom / 2, yWiggleRoom / 2);}
+        if(randomZIndex < 0.4f){randomZWiggleRoom = Random.Range(-zWiggleRoom, -zWiggleRoom / 2);}
+        else if (randomZIndex > 0.6f){randomZWiggleRoom = Random.Range(yWiggleRoom / 2, yWiggleRoom);}
+        else{randomZWiggleRoom = Random.Range(-zWiggleRoom / 2, zWiggleRoom / 2);}
+        return new Vector3(0f, randomYWiggleRoom, randomZWiggleRoom);
+    }
+
     public void SpawnObject()
     {
-        Vector3 scaleMultiplier = new Vector3(Random.Range(0.1f, 1), Random.Range(0.1f, 1), Random.Range(0.1f, 1));
-        float yWiggleRoom = (1 - scaleMultiplier.y) / 2;
-        float zWiggleRoom = (1 - scaleMultiplier.z) / 2;
-        Vector3 positionOffsetMultiplier = new Vector3(0f, Random.Range(-yWiggleRoom, yWiggleRoom), Random.Range(-zWiggleRoom, zWiggleRoom));
+        Vector3 scaleMultiplier = new Vector3(Random.Range(0.5f, 1), Random.Range(0.3f, 0.9f), Random.Range(0.3f, 0.9f));
 
-        NetworkManager.instance.InstantiateObstacle(transform, scaleMultiplier, positionOffsetMultiplier).Initialize(initialeForceStrength);
+        Vector3 positionOffsetMultiplier = RandomPositionOffsetMultiplier(scaleMultiplier);
+        NetworkManager.instance.InstantiateObstacle(transform, scaleMultiplier, positionOffsetMultiplier)
+        .Initialize(initialeForceStrength + Random.Range(-initialeForceStrengthOffset, initialeForceStrengthOffset));
         if (stopSpawning)
         {
             CancelInvoke("SpawnObject");

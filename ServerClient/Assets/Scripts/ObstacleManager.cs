@@ -4,11 +4,24 @@ using UnityEngine;
 
 public class ObstacleManager : MonoBehaviour
 {
+    public static Color[] colorsArr = 
+    {
+        new Color(0,0.1f,1,1),
+        new Color(0,1,0.1f,1),
+        new Color(1,0,0.1f,1),
+    };
     public int id;
 
-    public void Initialize(int _id)
+    public void Initialize(int _id, int _colorIndex)
     {
         id = _id;
+        CreateRandomColor(_colorIndex);
+    }
+
+    public void CreateRandomColor(int _colorIndex)
+    {
+        Debug.Log(_colorIndex);
+        this.GetComponent<Renderer>().material.color = colorsArr[_colorIndex];
     }
 
     public void Destroy(Vector3 _position)

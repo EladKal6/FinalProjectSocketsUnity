@@ -145,6 +145,11 @@ public class ServerSend
         {
             _packet.Write(_obstacle.id);
             _packet.Write(_obstacle.transform.position);
+            _packet.Write(_obstacle.transform.localScale);
+            _packet.Write(_obstacle.transform.rotation);
+            _packet.Write(_obstacle.transform.rotation);
+            _packet.Write(Random.Range(0,2));
+
 
             Debug.Log("Spawn Obstacle");
             SendTCPDataToAll(_packet);
@@ -158,6 +163,8 @@ public class ServerSend
             _packet.Write(_obstacle.id);
             _packet.Write(_obstacle.transform.position);
             _packet.Write(_obstacle.transform.localScale);
+            _packet.Write(_obstacle.transform.rotation);
+            _packet.Write(Random.Range(0,2));
 
             Debug.Log(_obstacle.id + " " + _obstacle.transform.position);
             SendTCPDataToAll(_packet);

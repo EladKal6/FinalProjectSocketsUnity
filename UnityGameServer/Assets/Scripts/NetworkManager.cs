@@ -43,7 +43,7 @@ public class NetworkManager : MonoBehaviour
 
     public Obstacle InstantiateObstacle(Transform _spawnOrigin, Vector3 _scaleMultiplier, Vector3 _positionOffsetMultiplier)
     {
-        GameObject obs = Instantiate(obstaclePrefab, _spawnOrigin.position, Quaternion.identity);
+        GameObject obs = Instantiate(obstaclePrefab, _spawnOrigin.position, Random.rotation);
         Debug.Log(obs.transform.localScale + "   " + _positionOffsetMultiplier + "   " + Vector3.Scale(obs.transform.localScale, _positionOffsetMultiplier));
         obs.transform.position += Vector3.Scale(obs.transform.localScale, _positionOffsetMultiplier);
 

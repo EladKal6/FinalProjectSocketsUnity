@@ -56,8 +56,10 @@ public class ClientHandle : MonoBehaviour
         int _obstacleId = _packet.ReadInt();
         Vector3 _position = _packet.ReadVector3();
         Vector3 _scale = _packet.ReadVector3();
+        Quaternion _rotation = _packet.ReadQuaternion();
+        int _colorIndex = _packet.ReadInt();
 
-        GameManager.instance.SpawnObstacle(_obstacleId, _position, _scale);
+        GameManager.instance.SpawnObstacle(_obstacleId, _position, _scale, _rotation, _colorIndex);
     }
 
     public static void ObstaclePosition(Packet _packet)
@@ -71,8 +73,12 @@ public class ClientHandle : MonoBehaviour
         }
         catch (KeyNotFoundException)
         {
+            Debug.Log(_packet.UnreadLength());
             Vector3 _scale = _packet.ReadVector3();
-            GameManager.instance.SpawnObstacle(_obstacleId, _position, _scale);
+            Quaternion _rotation = _packet.ReadQuaternion();
+            int _colorIndex = _packet.ReadInt();
+
+            GameManager.instance.SpawnObstacle(_obstacleId, _position, _scale, _rotation, _colorIndex);
         }
 
     }
