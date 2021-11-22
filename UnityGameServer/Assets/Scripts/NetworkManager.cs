@@ -41,9 +41,9 @@ public class NetworkManager : MonoBehaviour
         return Instantiate(playerPrefab, new Vector3(0f, 0.5f, 0f), Quaternion.identity).GetComponent<Player>();
     }
 
-    public Obstacle InstantiateObstacle(Transform _spawnOrigin, Vector3 _scaleMultiplier, Vector3 _positionOffsetMultiplier)
+    public Obstacle InstantiateObstacle(Transform _spawnOrigin, Vector3 _scaleMultiplier, Vector3 _positionOffsetMultiplier, Quaternion _rotation)
     {
-        GameObject obs = Instantiate(obstaclePrefab, _spawnOrigin.position, Random.rotation);
+        GameObject obs = Instantiate(obstaclePrefab, _spawnOrigin.position, _rotation);
         Debug.Log(obs.transform.localScale + "   " + _positionOffsetMultiplier + "   " + Vector3.Scale(obs.transform.localScale, _positionOffsetMultiplier));
         obs.transform.position += Vector3.Scale(obs.transform.localScale, _positionOffsetMultiplier);
 

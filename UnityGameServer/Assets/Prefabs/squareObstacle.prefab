@@ -109,6 +109,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
-  rigidBody: {fileID: 0}
-  scaleMultiplier: {x: 0, y: 0, z: 0}
-  initialForce: {x: 0, y: 0, z: 0}
+  timeToLive: 25

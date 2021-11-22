@@ -41,10 +41,11 @@ public class ObstacleSpawnerScript : MonoBehaviour
 
     public void SpawnObject()
     {
-        Vector3 scaleMultiplier = new Vector3(Random.Range(0.5f, 1), Random.Range(0.3f, 0.9f), Random.Range(0.3f, 0.9f));
+        Quaternion _rotation = Quaternion.Euler(new Vector3(Random.Range(0f, 5f), Random.Range(0f, 25f)));
+        Vector3 scaleMultiplier = new Vector3(Random.Range(0.5f, 1f), Random.Range(0.3f, 0.8f), Random.Range(0.1f, 0.9f));
 
         Vector3 positionOffsetMultiplier = RandomPositionOffsetMultiplier(scaleMultiplier);
-        NetworkManager.instance.InstantiateObstacle(transform, scaleMultiplier, positionOffsetMultiplier)
+        NetworkManager.instance.InstantiateObstacle(transform, scaleMultiplier, positionOffsetMultiplier, _rotation)
         .Initialize(initialeForceStrength + Random.Range(-initialeForceStrengthOffset, initialeForceStrengthOffset));
         if (stopSpawning)
         {

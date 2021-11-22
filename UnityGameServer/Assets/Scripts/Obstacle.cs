@@ -8,7 +8,8 @@ public class Obstacle : MonoBehaviour
     private static int nextObstacleId = 1;
 
     public int id;
-    public Vector3 initialForce;
+    private Vector3 initialForce;
+    public float timeToLive;
 
     private void Start()
     {
@@ -34,7 +35,7 @@ public class Obstacle : MonoBehaviour
 
     private IEnumerator DestroyAfterTime()
     {
-        yield return new WaitForSeconds(10f);
+        yield return new WaitForSeconds(timeToLive);
 
         ServerSend.ObstacleDestroyed(this);
 

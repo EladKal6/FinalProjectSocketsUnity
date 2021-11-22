@@ -73,7 +73,6 @@ public class ClientHandle : MonoBehaviour
         }
         catch (KeyNotFoundException)
         {
-            Debug.Log(_packet.UnreadLength());
             Vector3 _scale = _packet.ReadVector3();
             Quaternion _rotation = _packet.ReadQuaternion();
             int _colorIndex = _packet.ReadInt();

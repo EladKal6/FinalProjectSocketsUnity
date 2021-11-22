@@ -20,8 +20,14 @@ public class ObstacleManager : MonoBehaviour
 
     public void CreateRandomColor(int _colorIndex)
     {
-        Debug.Log(_colorIndex);
-        this.GetComponent<Renderer>().material.color = colorsArr[_colorIndex];
+        try
+        {
+            this.GetComponent<Renderer>().material.color = colorsArr[_colorIndex];
+        }
+        catch (System.IndexOutOfRangeException)
+        {
+            Debug.Log(_colorIndex);
+        }
     }
 
     public void Destroy(Vector3 _position)
@@ -33,7 +39,6 @@ public class ObstacleManager : MonoBehaviour
 
     public void ChangePosition(Vector3 _position)
     {
-        Debug.Log(id + " " + _position);
         transform.position = _position;
     }
 
