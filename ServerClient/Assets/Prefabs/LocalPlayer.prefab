@@ -255,3 +255,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   username: 
+  dead: 0
+  model: {fileID: 9195087756786288571}

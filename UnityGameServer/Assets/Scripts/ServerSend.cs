@@ -129,6 +129,18 @@ public class ServerSend
         }
     }
 
+    /// <summary>Tells all clients that a player has died.</summary>
+    /// <param name="_playerId">The player that died.</param>
+    public static void PlayerDied(int _playerId)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.playerDied))
+        {
+            _packet.Write(_playerId);
+
+            SendTCPDataToAll(_packet);
+        }
+    }
+
     public static void PlayerDisconnected(int _playerId)
     {
         using (Packet _packet = new Packet((int)ServerPackets.playerDisconnected))
@@ -147,11 +159,26 @@ public class ServerSend
             _packet.Write(_obstacle.transform.position);
             _packet.Write(_obstacle.transform.localScale);
             _packet.Write(_obstacle.transform.rotation);
-            _packet.Write(Random.Range(0,3));
+            _packet.Write(_obstacle.colorIndex);
 
 
             Debug.Log("Spawn Obstacle");
             SendTCPDataToAll(_packet);
+        }
+    }
+    public static void SpawnObstacleToPlayer(int _clientId, Obstacle _obstacle)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.spawnObstacle))
+        {
+            _packet.Write(_obstacle.id);
+            _packet.Write(_obstacle.transform.position);
+            _packet.Write(_obstacle.transform.localScale);
+            _packet.Write(_obstacle.transform.rotation);
+            _packet.Write(_obstacle.colorIndex);
+
+
+            Debug.Log("Spawn Obstacle");
+            SendTCPData(_clientId, _packet);
         }
     }
 
@@ -161,11 +188,7 @@ public class ServerSend
         {
             _packet.Write(_obstacle.id);
             _packet.Write(_obstacle.transform.position);
-            _packet.Write(_obstacle.transform.localScale);
-            _packet.Write(_obstacle.transform.rotation);
-            _packet.Write(Random.Range(0,3));
 
-            Debug.Log(_obstacle.id + " " + _obstacle.transform.position);
             SendTCPDataToAll(_packet);
         }
     }

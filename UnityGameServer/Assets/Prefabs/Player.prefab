@@ -129,6 +129,8 @@ MonoBehaviour:
   id: 0
   username: 
   controller: {fileID: 5161773272503657800}
+  model: {fileID: 6605038899962304925}
+  playerObj: {fileID: 5106455485878667925}
   gravity: -19.62
   moveSpeed: 5
   jumpSpeed: 9
@@ -147,6 +149,6 @@ CharacterController:
   m_Radius: 0.5
   m_SlopeLimit: 45
   m_StepOffset: 0.3
-  m_SkinWidth: 0.08
+  m_SkinWidth: 0.2
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}

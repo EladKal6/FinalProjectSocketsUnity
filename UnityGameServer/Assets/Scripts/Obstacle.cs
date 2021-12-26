@@ -8,6 +8,7 @@ public class Obstacle : MonoBehaviour
     private static int nextObstacleId = 1;
 
     public int id;
+    public int colorIndex;
     private Vector3 initialForce;
     public float timeToLive;
 
@@ -15,6 +16,7 @@ public class Obstacle : MonoBehaviour
     {
         id = nextObstacleId;
         nextObstacleId++;
+        colorIndex = Random.Range(0, 3);
         obstacles.Add(id, this);
 
         ServerSend.SpawnObstacle(this);

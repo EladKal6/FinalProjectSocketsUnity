@@ -279,6 +279,7 @@ public class Client : MonoBehaviour
             { (int)ServerPackets.spawnPlayer, ClientHandle.SpawnPlayer },
             { (int)ServerPackets.playerPosition, ClientHandle.PlayerPosition },
             { (int)ServerPackets.playerRotation, ClientHandle.PlayerRotation },
+            { (int)ServerPackets.PlayerDied, ClientHandle.PlayerDied },
             { (int)ServerPackets.playerDisconnected, ClientHandle.PlayerDisconnected },
             { (int)ServerPackets.spawnObstacle, ClientHandle.SpawnObstacle },
             { (int)ServerPackets.obstaclePosition, ClientHandle.ObstaclePosition },

@@ -6,4 +6,6 @@ public class PlayerManager : MonoBehaviour
 {
     public int id;
     public string username;
+    public bool dead;
+    public MeshRenderer model;
 }

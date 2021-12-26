@@ -40,7 +40,15 @@ public class ClientHandle : MonoBehaviour
         int _id = _packet.ReadInt();
         Quaternion _rotation = _packet.ReadQuaternion();
 
-        GameManager.players[_id].transform.rotation = _rotation;;
+        GameManager.players[_id].transform.rotation = _rotation;
+    }
+
+    public static void PlayerDied(Packet _packet)
+    {
+        int _id = _packet.ReadInt();
+
+        Debug.Log(_id + "Died!");
+        GameManager.players[_id].model.enabled = false;
     }
 
     public static void PlayerDisconnected(Packet _packet)
@@ -50,6 +58,7 @@ public class ClientHandle : MonoBehaviour
         Destroy(GameManager.players[_id].gameObject);
         GameManager.players.Remove(_id);
     }
+
 
     public static void SpawnObstacle(Packet _packet)
     {
@@ -67,19 +76,7 @@ public class ClientHandle : MonoBehaviour
         int _obstacleId = _packet.ReadInt();
         Vector3 _position = _packet.ReadVector3();
 
-        try
-        {
-            GameManager.obstacles[_obstacleId].ChangePosition(_position);
-        }
-        catch (KeyNotFoundException)
-        {
-            Vector3 _scale = _packet.ReadVector3();
-            Quaternion _rotation = _packet.ReadQuaternion();
-            int _colorIndex = _packet.ReadInt();
-
-            GameManager.instance.SpawnObstacle(_obstacleId, _position, _scale, _rotation, _colorIndex);
-        }
-
+        GameManager.obstacles[_obstacleId].ChangePosition(_position);
     }
 
     public static void ObstacleDestroyed(Packet _packet)

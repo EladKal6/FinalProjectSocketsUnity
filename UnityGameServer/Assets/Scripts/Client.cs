@@ -235,6 +235,12 @@ public class Client
                 ServerSend.SpawnPlayer(_client.id, player);
             }
         }
+
+        // Send all the obsticales to the new player
+        foreach (Obstacle _obs in Obstacle.obstacles.Values)
+        {
+            ServerSend.SpawnObstacleToPlayer(id, _obs);
+        }
     }
 
     /// <summary>Disconnects the client and stops all network traffic.</summary>
