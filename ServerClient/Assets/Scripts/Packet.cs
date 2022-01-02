@@ -5,7 +5,7 @@ using System;
 using System.Text;
 
 /// <summary>Sent from server to client.</summary>
-public enum ServerPackets
+public enum GameServerPackets
 {
     welcome = 1,
     spawnPlayer,
@@ -18,11 +18,29 @@ public enum ServerPackets
     obstacleDestroyed
 }
 
+/// <summary>Sent from client to Game server.</summary>
+public enum ClientPacketsGame
+{
+    welcomeRecieved = 1,
+    playerMovement
+}
+
+/// <summary>Sent from server to client.</summary>
+public enum ServerManagerPackets
+{
+    welcome = 1,
+    sendLobbies,
+    sendPlayerToGame,
+}
+
 /// <summary>Sent from client to server.</summary>
-public enum ClientPackets
+public enum ClientPacketsLobby
 {
     welcomeReceived = 1,
-    PlayerMovement
+    requestLobbies,
+    hostRequest,
+    joinRequest,
+    playerReady
 }
 
 public class Packet : IDisposable

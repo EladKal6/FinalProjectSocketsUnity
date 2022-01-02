@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 
     public static Dictionary<int, PlayerManager> players = new Dictionary<int, PlayerManager>();
     public static Dictionary<int, ObstacleManager> obstacles = new Dictionary<int, ObstacleManager>();
+    public static Dictionary<int, LobbyManager> lobbies = new Dictionary<int, LobbyManager>();
 
 
     public GameObject localPlayerPrefab;

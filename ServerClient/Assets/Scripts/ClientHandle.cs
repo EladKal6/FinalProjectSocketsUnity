@@ -86,4 +86,18 @@ public class ClientHandle : MonoBehaviour
 
         GameManager.obstacles[_obstacleId].Destroy(_position);
     }
+
+    public static LobbyManager[] GetLobbies(Packet _packet)
+    {
+        int lobbiesAmnt = _packet.ReadInt();
+        LobbyManager[] lobbies = new LobbyManager[lobbiesAmnt];
+
+
+        for (int i = 0; i < lobbiesAmnt; i++)
+        {
+            lobbies[i] = new LobbyManager;
+        }
+
+        return lobbies;
+    }
 }

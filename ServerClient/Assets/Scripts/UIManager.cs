@@ -29,4 +29,19 @@ public class UIManager : MonoBehaviour
         usernameField.interactable = false;
         Client.instance.ConnectToServer();
     }
+
+    public void HostLobby()
+    {
+        ClientSend.HostRequest();
+    }
+
+    public void JoinLobby(int _lobbyClient)
+    {
+        ClientSend.JoinRequest(_lobbyClient);
+    }
+
+    public void ShowLobbies()
+    {
+        ClientSend.RequestLobbies();
+    }
 }

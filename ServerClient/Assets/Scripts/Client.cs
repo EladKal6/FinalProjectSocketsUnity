@@ -275,15 +275,15 @@ public class Client : MonoBehaviour
     {
         packetHandlers = new Dictionary<int, PacketHandler>()
         {
-            { (int)ServerPackets.welcome, ClientHandle.Welcome },
-            { (int)ServerPackets.spawnPlayer, ClientHandle.SpawnPlayer },
-            { (int)ServerPackets.playerPosition, ClientHandle.PlayerPosition },
-            { (int)ServerPackets.playerRotation, ClientHandle.PlayerRotation },
-            { (int)ServerPackets.PlayerDied, ClientHandle.PlayerDied },
-            { (int)ServerPackets.playerDisconnected, ClientHandle.PlayerDisconnected },
-            { (int)ServerPackets.spawnObstacle, ClientHandle.SpawnObstacle },
-            { (int)ServerPackets.obstaclePosition, ClientHandle.ObstaclePosition },
-            { (int)ServerPackets.obstacleDestroyed, ClientHandle.ObstacleDestroyed }
+            { (int)GameServerPackets.welcome, ClientHandle.Welcome },
+            { (int)GameServerPackets.spawnPlayer, ClientHandle.SpawnPlayer },
+            { (int)GameServerPackets.playerPosition, ClientHandle.PlayerPosition },
+            { (int)GameServerPackets.playerRotation, ClientHandle.PlayerRotation },
+            { (int)GameServerPackets.PlayerDied, ClientHandle.PlayerDied },
+            { (int)GameServerPackets.playerDisconnected, ClientHandle.PlayerDisconnected },
+            { (int)GameServerPackets.spawnObstacle, ClientHandle.SpawnObstacle },
+            { (int)GameServerPackets.obstaclePosition, ClientHandle.ObstaclePosition },
+            { (int)GameServerPackets.obstacleDestroyed, ClientHandle.ObstacleDestroyed }
         };
         Debug.Log("Initialized packets.");
     }

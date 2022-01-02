@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GameServer
+namespace ServerManager
 {
     class ServerSend
     {
@@ -35,11 +35,28 @@ namespace GameServer
         #region Packets
         public static void Welcome(int _toClient, string _msg)
         {
-            using (Packet _packet = new Packet((int)ServerPackets.welcome))
+            using (Packet _packet = new Packet((int)ServerManagerPackets.welcome))
             {
                 _packet.Write(_msg);
                 _packet.Write(_toClient);
 
+                SendTCPData(_toClient, _packet);
+            }
+        }
+
+        public static void SendLobbies(int _toClient)
+        {
+            using (Packet _packet = new Packet((int)ServerManagerPackets.sendLobbies))
+            {
+                _packet.Write(_toClient);
+                _packet.Write(Server.lobbies.Count);
+
+                foreach (KeyValuePair<int, Lobby> entry in Server.lobbies)
+                {
+                    _packet.Write(entry.Key);
+                    _packet.Write(entry.Value.maxPlayers);
+                    _packet.Write(entry.Value.current);
+                }
                 SendTCPData(_toClient, _packet);
             }
         }

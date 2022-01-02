@@ -1,24 +1,26 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-namespace GameServer
+namespace ServerManager
 {
     /// <summary>Sent from server to client.</summary>
-    public enum ServerPackets
+    public enum ServerManagerPackets
     {
         welcome = 1,
-        spawnPlayer,
-        playerPosition,
-        playerRotation
+        sendLobbies,
+        sendPlayerToGame,
     }
 
     /// <summary>Sent from client to server.</summary>
-    public enum ClientPackets
+    public enum ClientPacketsLobby
     {
         welcomeReceived = 1,
-        playerMovement
+        requestLobbies,
+        startLobby,
+        joinLobby,
+        playerReady
     }
 
     public class Packet : IDisposable

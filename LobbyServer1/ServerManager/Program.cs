@@ -1,7 +1,9 @@
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 
-namespace GameServer
+namespace ServerManager
 {
     class Program
     {

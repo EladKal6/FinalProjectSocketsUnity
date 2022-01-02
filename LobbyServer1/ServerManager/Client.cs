@@ -1,18 +1,16 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Net;
 using System.Net.Sockets;
-using System.Numerics;
+using System.Text;
 
-namespace GameServer
+namespace ServerManager
 {
     class Client
     {
         public static int dataBufferSize = 4096;
 
         public int id;
-        public Player player;
+        public User user;
         public TCP tcp;
 
         public Client(int _clientId)
@@ -155,10 +153,9 @@ namespace GameServer
         {
             Console.WriteLine($"{tcp.socket.Client.RemoteEndPoint} has disconnected.");
 
-            player = null;
+            user = null;
 
             tcp.Disconnect();
-            udp.Disconnect();
         }
     }
 }
