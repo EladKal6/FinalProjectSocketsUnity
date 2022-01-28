@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class LobbyManager : MonoBehaviour
 {
+    public string name;
     public int maxPlayers;
     public int current;
 
