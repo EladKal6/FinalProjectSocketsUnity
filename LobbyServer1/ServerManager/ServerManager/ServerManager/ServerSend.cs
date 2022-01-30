@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace LobbyServer
+namespace ServerManager
 {
     class ServerSend
     {
@@ -48,12 +48,12 @@ namespace LobbyServer
         {
             using (Packet _packet = new Packet((int)ServerManagerPackets.sendLobbies))
             {
-                _packet.Write(_toClient);
                 _packet.Write(Server.lobbies.Count);
 
                 foreach (KeyValuePair<int, Lobby> entry in Server.lobbies)
                 {
                     _packet.Write(entry.Key);
+                    _packet.Write(entry.Value.lobbyName);
                     _packet.Write(entry.Value.maxPlayers);
                     _packet.Write(entry.Value.current);
                 }

@@ -7,7 +7,7 @@ using System.Text;
 /// <summary>Sent from server to client.</summary>
 public enum GameServerPackets
 {
-    welcome = 1,
+    gamewelcome = 1,
     spawnPlayer,
     playerPosition,
     playerRotation,
@@ -28,7 +28,7 @@ public enum ClientPacketsGame
 /// <summary>Sent from server to client.</summary>
 public enum ServerManagerPackets
 {
-    welcome = 1,
+    welcome = 100,
     sendLobbies,
     sendPlayerToGame,
 }

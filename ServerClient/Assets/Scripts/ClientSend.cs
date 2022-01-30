@@ -43,16 +43,19 @@ public class ClientSend : MonoBehaviour
         }
     }
 
-    public static void HostRequest()
+    public static void HostRequest(string lobbyName, int MaxPlayers)
     {
         using (Packet _packet = new Packet((int)ClientPacketsLobby.hostRequest))
         {
-            _packet.Write(Client.instance.myId);
+            _packet.Write(lobbyName);
+            _packet.Write(MaxPlayers);
 
             SendTCPData(_packet);
+            Debug.Log("Sent!");
         }
     }
 
+    //WORK IN PROGRESS!
     public static void JoinRequest(int _lobbyClient)
     {
         using (Packet _packet = new Packet((int)ClientPacketsLobby.joinRequest))

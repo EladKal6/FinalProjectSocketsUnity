@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace LobbyServer
+namespace ServerManager
 {
     class Lobby
     {
+        public string lobbyName { get; }
         public int maxPlayers { get; }
         public Client[] clients { get; }
         public int current { get; }
-        public Lobby(int _maxPlayers)
+        public Lobby(string lobbyName, int _maxPlayers)
         {
-            maxPlayers = _maxPlayers;
+            this.lobbyName = lobbyName;
+            this.maxPlayers = _maxPlayers;
             clients = new Client[maxPlayers];
             current = 0;
         }

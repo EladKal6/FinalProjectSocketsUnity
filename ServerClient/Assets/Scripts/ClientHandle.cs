@@ -13,6 +13,16 @@ public class ClientHandle : MonoBehaviour
         Debug.Log($"Message from server: {_msg}");
         Client.instance.myId = _myId;
         ClientSend.WelcomeReceived();
+    }
+
+    public static void GameWelcome(Packet _packet)
+    {
+        string _msg = _packet.ReadString();
+        int _myId = _packet.ReadInt();
+
+        Debug.Log($"Message from server: {_msg}");
+        Client.instance.myId = _myId;
+        ClientSend.WelcomeReceived();
 
         Client.instance.udp.Connect(((IPEndPoint)Client.instance.tcp.socket.Client.LocalEndPoint).Port);
     }
@@ -87,17 +97,12 @@ public class ClientHandle : MonoBehaviour
         GameManager.obstacles[_obstacleId].Destroy(_position);
     }
 
-    public static LobbyManager[] GetLobbies(Packet _packet)
+    public static void UpdateLobbies(Packet _packet)
     {
         int lobbiesAmnt = _packet.ReadInt();
-        LobbyManager[] lobbies = new LobbyManager[lobbiesAmnt];
-
-
         for (int i = 0; i < lobbiesAmnt; i++)
         {
-            lobbies[i] = new LobbyManager;
+            GameManager.lobbies[_packet.ReadInt()] = new Lobby(_packet.ReadString(), _packet.ReadInt(), _packet.ReadInt());
         }
-
-        return lobbies;
     }
 }

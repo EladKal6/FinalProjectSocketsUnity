@@ -238,8 +238,9 @@ public class Client : MonoBehaviour
 
                 HandleData(_data);
             }
-            catch
+            catch  (Exception _ex)
             {
+                Debug.LogError(_ex);
                 instance.Disconnect();
             }
         }
@@ -275,7 +276,8 @@ public class Client : MonoBehaviour
     {
         packetHandlers = new Dictionary<int, PacketHandler>()
         {
-            { (int)GameServerPackets.welcome, ClientHandle.Welcome },
+            { (int)ServerManagerPackets.welcome, ClientHandle.Welcome },
+            { (int)GameServerPackets.gamewelcome, ClientHandle.GameWelcome },
             { (int)GameServerPackets.spawnPlayer, ClientHandle.SpawnPlayer },
             { (int)GameServerPackets.playerPosition, ClientHandle.PlayerPosition },
             { (int)GameServerPackets.playerRotation, ClientHandle.PlayerRotation },

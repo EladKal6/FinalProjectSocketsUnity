@@ -20,6 +20,7 @@ namespace LobbyServer
 
         public static void StartLobby(int _fromClient, Packet _packet)
         {
+            string _lobbyName = _packet.ReadString();
             int _maxPlayers = _packet.ReadInt();
             Server.lobbies.Add(_fromClient, new Lobby(_maxPlayers));
             Server.lobbies[_fromClient].AddClient(_fromClient);

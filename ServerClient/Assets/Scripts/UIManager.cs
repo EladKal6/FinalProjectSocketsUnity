@@ -10,6 +10,10 @@ public class UIManager : MonoBehaviour
     public GameObject startMenu;
     public InputField usernameField;
 
+
+    public InputField lobbyNameField;
+    public InputField maxPlayersField;
+
     private void Awake()
     {
         if (instance == null)
@@ -32,7 +36,8 @@ public class UIManager : MonoBehaviour
 
     public void HostLobby()
     {
-        ClientSend.HostRequest();
+        ClientSend.HostRequest(lobbyNameField.text, int.Parse(maxPlayersField.text));
+        Debug.Log("clicked!");
     }
 
     public void JoinLobby(int _lobbyClient)
