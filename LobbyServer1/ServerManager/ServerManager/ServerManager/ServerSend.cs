@@ -60,6 +60,43 @@ namespace ServerManager
                 SendTCPData(_toClient, _packet);
             }
         }
+
+        //lets a client know that another client joined the lobby
+        public static void PlayerjoinedLobby(int _toClient, string _clientName)
+        {
+            using (Packet _packet = new Packet((int)ServerManagerPackets.sendJoinedPlayer))
+            {
+                _packet.Write(_clientName); 
+
+                SendTCPData(_toClient, _packet);
+            }
+        }
+
+        public static void PlayerDisconnectedLobby(int _toClient, string _clientName)
+        {
+            using (Packet _packet = new Packet((int)ServerManagerPackets.sendDisconnectedPlayer))
+            {
+                _packet.Write(_clientName);
+
+                SendTCPData(_toClient, _packet);
+            }
+        }
+
+        public static void RemoveLobby(int _toClient)
+        {
+            using (Packet _packet = new Packet((int)ServerManagerPackets.sendRemovedLobby))
+            {
+                SendTCPData(_toClient, _packet);
+            }
+        }
+
+        public static void SendIntoGame(int _toClient)
+        {
+            using (Packet _packet = new Packet((int)ServerManagerPackets.SendIntoGame))
+            {
+                SendTCPData(_toClient, _packet);
+            }
+        }
         #endregion
     }
 }

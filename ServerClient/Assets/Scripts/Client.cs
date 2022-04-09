@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Net;
 using System.Net.Sockets;
 using System;
+using UnityEngine.SceneManagement;
 
 public class Client : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class Client : MonoBehaviour
     public TCP tcp;
     public UDP udp;
 
-    private bool isConnected = false;
+    public bool isConnected = false;
     private delegate void PacketHandler(Packet _packet);
     private static Dictionary<int, PacketHandler> packetHandlers;
 
@@ -37,6 +38,11 @@ public class Client : MonoBehaviour
     {
         tcp = new TCP();
         udp = new UDP();
+
+        if (SceneManager.GetActiveScene().name != "MainMenu")
+        {
+            Client.instance.ConnectToServer();
+        }
     }
 
     private void OnApplicationQuit()
@@ -70,6 +76,7 @@ public class Client : MonoBehaviour
             };
 
             receiveBuffer = new byte[dataBufferSize];
+            Debug.Log("Begin Connect to port " + instance.port);
             socket.BeginConnect(instance.ip, instance.port, ConnectCallback, socket);
         }
 
@@ -121,8 +128,9 @@ public class Client : MonoBehaviour
                 receivedData.Reset(HandleData(_data));
                 stream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
             }
-            catch
+            catch (Exception _ex)
             {
+                Debug.Log("Inside Disconnect " + _ex);
                 Disconnect();
             }
         }
@@ -265,6 +273,7 @@ public class Client : MonoBehaviour
 
         private void Disconnect()
         {
+            Debug.Log("making the socket null");
             instance.Disconnect();
 
             endPoint = null;
@@ -277,6 +286,11 @@ public class Client : MonoBehaviour
         packetHandlers = new Dictionary<int, PacketHandler>()
         {
             { (int)ServerManagerPackets.welcome, ClientHandle.Welcome },
+            { (int)ServerManagerPackets.sendLobbies, ClientHandle.UpdateLobbies },
+            { (int)ServerManagerPackets.sendJoinedPlayer, ClientHandle.PlayerJoinedLobby },
+            { (int)ServerManagerPackets.SendIntoGame, ClientHandle.SendIntoGame },
+            { (int)ServerManagerPackets.sendDisconnectedPlayer, ClientHandle.PlayerDisconnectedLobby },
+            { (int)ServerManagerPackets.sendRemovedLobby, ClientHandle.LobbyRemoved },
             { (int)GameServerPackets.gamewelcome, ClientHandle.GameWelcome },
             { (int)GameServerPackets.spawnPlayer, ClientHandle.SpawnPlayer },
             { (int)GameServerPackets.playerPosition, ClientHandle.PlayerPosition },
@@ -294,11 +308,59 @@ public class Client : MonoBehaviour
     {
         if (isConnected)
         {
+            Debug.Log("Disconecting...");
+            try
+            {
+                bool isHost = false;
+                foreach (Transform Menu in UIManager.instance.entireMenu.transform)
+                {
+                    if (Menu.name == "HostLobbyMenu" && Menu.gameObject.activeSelf == true)
+                    {
+                        isHost = true;
+                    }
+                }
+                if (isHost)
+                {
+                    Debug.Log("Closing Lobby");
+                    ClientSend.ClosingLobby();
+                }
+                else
+                {
+                    Debug.Log("Exiting Lobby");
+                    ClientSend.PlayerExitingLobby();
+                }
+            }
+            catch
+            {
+                Debug.Log("There is no menu");
+            }
+            
+
             isConnected = false;
             tcp.socket.Close();
-            udp.socket.Close();
+            try
+            {
+                udp.socket.Close();
+            }
+            catch
+            {
+                Debug.Log("udp didn't exist!");
+            }
 
             Debug.Log("Disconnected from server");
         }
+    }
+
+    public void SendIntoGame(int Gameport)
+    {
+            SceneManager.LoadScene("Game", LoadSceneMode.Single);
+            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            Debug.Log(Client.instance);
+            Debug.Log(Client.instance.tcp);
+            Debug.Log(Client.instance.tcp.socket);
+            Debug.Log(Client.instance.isConnected);
+
+
+            Debug.Log(instance.port);
     }
 }

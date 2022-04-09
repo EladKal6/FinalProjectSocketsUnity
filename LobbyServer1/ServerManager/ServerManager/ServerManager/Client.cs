@@ -144,14 +144,36 @@ namespace ServerManager
             }
         }
 
-        public void SendIntoGame(string _playerName)
-        {
-            //send the players into the game server
-        }
-
         private void Disconnect()
         {
             Console.WriteLine($"{tcp.socket.Client.RemoteEndPoint} has disconnected.");
+
+            if (Server.lobbies.ContainsKey(id))
+            {
+                //kicks out everyone from the lobby
+                foreach (Client client in Server.lobbies[id].clients)
+                {
+                    if (client.id != id)
+                    {
+                        ServerSend.RemoveLobby(client.id);
+                    }
+                }
+                Server.lobbies.Remove(id);
+            }
+            
+            foreach (Lobby lobby in Server.lobbies.Values)
+            {
+                if (lobby.RemoveClient(id))
+                {
+                    foreach (Client client in lobby.clients)
+                    {
+                        if (client != null && client.id != id)
+                        {
+                            ServerSend.PlayerDisconnectedLobby(client.id, Server.clients[id].user.username);
+                        }
+                    }
+                }
+            }
 
             user = null;
 

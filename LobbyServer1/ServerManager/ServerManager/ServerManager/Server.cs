@@ -12,10 +12,25 @@ namespace ServerManager
         public static int Port { get; private set; }
         public static Dictionary<int, Client> clients = new Dictionary<int, Client>();
         public static Dictionary<int, Lobby> lobbies = new Dictionary<int, Lobby>();
+        public static Dictionary<int, Lobby> activeLobbies = new Dictionary<int, Lobby>();
         public delegate void PacketHandler(int _fromClient, Packet _packet);
         public static Dictionary<int, PacketHandler> packetHandlers;
 
         private static TcpListener tcpListener;
+
+
+        public static int GetClientIDWithUsername(string _username)
+        {
+            foreach(int clientID in clients.Keys)
+            {
+                if(clients[clientID].user != null && clients[clientID].user.username == _username)
+                {
+                    return clientID;
+                }
+            }
+            Console.WriteLine("Couldn't find client with that username");
+            return -999;
+        }
 
         public static void Start(int _maxPlayers, int _port)
         {
@@ -63,6 +78,9 @@ namespace ServerManager
                 { (int)ClientPacketsLobby.requestLobbies, ServerHandle.RequestLobbies },
                 { (int)ClientPacketsLobby.hostRequest, ServerHandle.StartLobby },
                 { (int)ClientPacketsLobby.joinRequest, ServerHandle.JoinLobby },
+                { (int)ClientPacketsLobby.SendIntoGame, ServerHandle.SendIntoGame },
+                { (int)ClientPacketsLobby.closeLobby, ServerHandle.CloseLobby },
+                { (int)ClientPacketsLobby.playerExitLobby, ServerHandle.PlayerExitLobby },
             };
             Console.WriteLine("Initialized packets.");
         }

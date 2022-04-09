@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
@@ -23,6 +24,13 @@ public class ClientHandle : MonoBehaviour
         Debug.Log($"Message from server: {_msg}");
         Client.instance.myId = _myId;
         ClientSend.WelcomeReceived();
+
+
+        Debug.Log(Client.instance.tcp.socket);
+        Debug.Log(Client.instance.isConnected);
+        Debug.Log(Client.instance.port);
+
+
 
         Client.instance.udp.Connect(((IPEndPoint)Client.instance.tcp.socket.Client.LocalEndPoint).Port);
     }
@@ -104,5 +112,50 @@ public class ClientHandle : MonoBehaviour
         {
             GameManager.lobbies[_packet.ReadInt()] = new Lobby(_packet.ReadString(), _packet.ReadInt(), _packet.ReadInt());
         }
+        Debug.Log($"Got {lobbiesAmnt} lobbies");
+
+        foreach(Lobby lobby in GameManager.lobbies.Values)
+        {
+            UIManager.instance.InstantiateLobbyBox(lobby.lobbyName, lobby.maxPlayers, lobby.currentPlayers);
+        }
+
+    }
+
+    public static void PlayerJoinedLobby(Packet _packet)
+    {
+        try
+        {
+            string username = _packet.ReadString();
+            Debug.Log(username + " joined the lobby");
+            UIManager.instance.InstantiatePlayerBox(username);
+        }
+        catch(Exception _ex)
+        {
+            Debug.Log(_ex);
+        }
+    }
+
+    public static void PlayerDisconnectedLobby(Packet _packet)
+    {
+        try
+        {
+            string username = _packet.ReadString();
+            Debug.Log(username + " Disconnected from the lobby");
+            UIManager.instance.RemovePlayerBox(username);
+        }
+        catch (Exception _ex)
+        {
+            Debug.Log(_ex);
+        }
+    }
+
+    public static void LobbyRemoved(Packet _packet)
+    {
+        UIManager.instance.BackToLobbyMenu();
+    }
+
+    public static void SendIntoGame(Packet _packet)
+    {
+        Client.instance.SendIntoGame(5555); //Game Port
     }
 }

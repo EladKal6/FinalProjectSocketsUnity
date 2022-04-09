@@ -30,7 +30,10 @@ public enum ServerManagerPackets
 {
     welcome = 100,
     sendLobbies,
-    sendPlayerToGame,
+    SendIntoGame,
+    sendJoinedPlayer,
+    sendDisconnectedPlayer,
+    sendRemovedLobby
 }
 
 /// <summary>Sent from client to server.</summary>
@@ -40,7 +43,10 @@ public enum ClientPacketsLobby
     requestLobbies,
     hostRequest,
     joinRequest,
-    playerReady
+    playerReady,
+    SendIntoGame,
+    closeLobby,
+    playerExitLobby
 }
 
 public class Packet : IDisposable

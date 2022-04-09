@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Game.unity
+    path: Assets/Scenes/MainMenu.unity
+    guid: 588f1655c984c0e4abd4d957b08da94d
+  - enabled: 1
+    path: Assets/Scenes/DodgeObs.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/Game.unity
+    guid: 68c233ce096519346ad619cc2b51080a
   m_configObjects: {}

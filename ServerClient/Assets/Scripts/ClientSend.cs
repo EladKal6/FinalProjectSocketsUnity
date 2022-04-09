@@ -22,8 +22,13 @@ public class ClientSend : MonoBehaviour
         using (Packet _packet = new Packet((int)ClientPacketsLobby.welcomeReceived))
         {
             _packet.Write(Client.instance.myId);
-            _packet.Write(UIManager.instance.usernameField.text);
-
+            try {
+                _packet.Write(UIManager.instance.usernameField.text); //FIX
+            }
+            catch
+            {
+                _packet.Write("PLAYER");
+            }
             SendTCPData(_packet);
         }
     }
@@ -55,13 +60,11 @@ public class ClientSend : MonoBehaviour
         }
     }
 
-    //WORK IN PROGRESS!
-    public static void JoinRequest(int _lobbyClient)
+    public static void JoinRequest(string _lobbyName)
     {
         using (Packet _packet = new Packet((int)ClientPacketsLobby.joinRequest))
         {
-            _packet.Write(Client.instance.myId);
-            _packet.Write(_lobbyClient);
+            _packet.Write(_lobbyName);
 
             SendTCPData(_packet);
         }
@@ -71,10 +74,36 @@ public class ClientSend : MonoBehaviour
     {
         using (Packet _packet = new Packet((int)ClientPacketsLobby.requestLobbies))
         {
-            _packet.Write(Client.instance.myId);
-
             SendTCPData(_packet);
         }
+        Debug.Log("requested Lobbies");
+    }
+
+    public static void ClosingLobby()
+    {
+        using (Packet _packet = new Packet((int)ClientPacketsLobby.closeLobby))
+        {
+            SendTCPData(_packet);
+        }
+        Debug.Log("requested Lobbies");
+    }
+
+    public static void PlayerExitingLobby()
+    {
+        using (Packet _packet = new Packet((int)ClientPacketsLobby.playerExitLobby))
+        {
+            SendTCPData(_packet);
+        }
+        Debug.Log("requested Lobbies");
+    }
+
+    public static void SendIntoGame()
+    {
+        using (Packet _packet = new Packet((int)ClientPacketsLobby.SendIntoGame))
+        {
+            SendTCPData(_packet);
+        }
+        Debug.Log("sent into game");
     }
     #endregion
 }
