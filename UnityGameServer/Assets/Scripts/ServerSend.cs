@@ -80,6 +80,7 @@ public class ServerSend
     {
         using (Packet _packet = new Packet((int)ServerPackets.welcome))
         {
+            Debug.Log($"sending Welcome to {Server.clients[_toClient].tcp.socket.Client.RemoteEndPoint}");
             _packet.Write(_msg);
             _packet.Write(_toClient);
 
@@ -110,7 +111,10 @@ public class ServerSend
         using (Packet _packet = new Packet((int)ServerPackets.playerPosition))
         {
             _packet.Write(_player.id);
-            _packet.Write(_player.transform.position);
+            _packet.Write(_player.transform.position); //new position
+            _packet.Write(_player.IsRunning()); //is Running?
+            _packet.Write(_player.IsFalling()); //is Falling?
+            _packet.Write(_player.IsJumping()); //is Jumping?
 
             SendUDPDataToAll(_packet);
         }
@@ -141,6 +145,80 @@ public class ServerSend
         }
     }
 
+    public static void StartShootTimer(int _countdown)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.startShootTimer))
+        {
+            Debug.Log("Currently sending shoot timer");
+            _packet.Write(_countdown);
+
+            SendTCPDataToAll(_packet);
+        }
+    }
+
+    public static void ShotLine(int _id)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.shotLine))
+        {
+            _packet.Write(_id);
+
+            SendUDPDataToAll(_packet);
+        }
+    }
+
+    public static void PlayerHealth(Player _player)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.playerHealth))
+        {
+            _packet.Write(_player.id);
+            _packet.Write(_player.health);
+
+            SendTCPDataToAll(_packet);
+        }
+    }
+
+    /// <summary>Tells all clients that a player has died.</summary>
+    /// <param name="_playerId">The player that died.</param>
+    public static void PlayerRevived(int _playerId)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.playerRevived))
+        {
+            _packet.Write(_playerId);
+
+            SendTCPDataToAll(_packet);
+        }
+    }
+
+    /// <summary>Tells all clients that a player has won.</summary>
+    /// <param name="_playerId">The player that won.</param>
+    public static void StartMinigame(int _winningClientId, string _minigameName)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.startMinigame))
+        {
+            _packet.Write(_winningClientId);
+            _packet.Write(_minigameName);
+
+            if (_minigameName == "Game")
+            {
+                _packet.Write(Player.ScoreboardToString());
+            }
+
+            SendTCPDataToAll(_packet);
+        }
+    }
+
+    /// <summary>Tells all clients that a player has won.</summary>
+    /// <param name="_playerId">The player that won.</param>
+    public static void roundWinnerUsername(string _winningUsername)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.roundWinnerUsername))
+        {
+            _packet.Write(_winningUsername);
+
+            SendTCPDataToAll(_packet);
+        }
+    }
+
     public static void PlayerDisconnected(int _playerId)
     {
         using (Packet _packet = new Packet((int)ServerPackets.playerDisconnected))
@@ -160,9 +238,9 @@ public class ServerSend
             _packet.Write(_obstacle.transform.localScale);
             _packet.Write(_obstacle.transform.rotation);
             _packet.Write(_obstacle.colorIndex);
+            _packet.Write(_obstacle.type);
+            Debug.Log(_obstacle.type);
 
-
-            Debug.Log("Spawn Obstacle");
             SendTCPDataToAll(_packet);
         }
     }
@@ -175,6 +253,8 @@ public class ServerSend
             _packet.Write(_obstacle.transform.localScale);
             _packet.Write(_obstacle.transform.rotation);
             _packet.Write(_obstacle.colorIndex);
+            _packet.Write(_obstacle.type);
+
 
 
             Debug.Log("Spawn Obstacle");
@@ -188,6 +268,8 @@ public class ServerSend
         {
             _packet.Write(_obstacle.id);
             _packet.Write(_obstacle.transform.position);
+            _packet.Write(_obstacle.type);
+
 
             SendTCPDataToAll(_packet);
         }
@@ -199,9 +281,33 @@ public class ServerSend
         {
             _packet.Write(_obstacle.id);
             _packet.Write(_obstacle.transform.position);
+            _packet.Write(_obstacle.type);
+
 
             SendTCPDataToAll(_packet);
         }
     }
+
+    public static void PropDestroyed(string propName)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.propDestroyed))
+        {
+            _packet.Write(propName);
+
+
+            SendTCPDataToAll(_packet);
+        }
+    }
+
+    public static void GameFinished(string _winnerUsername)
+    {
+        using (Packet _packet = new Packet((int)ServerPackets.gameFinished))
+        {
+            _packet.Write(_winnerUsername);
+
+            SendTCPDataToAll(_packet);
+        }
+    }
+
     #endregion
 }

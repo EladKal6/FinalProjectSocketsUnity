@@ -4,15 +4,30 @@ using System.Text;
 
 namespace ServerManager
 {
-    class User
+    public class User
     {
-        public int id;
-        public string username;
+        public Int64 Id { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
 
-        public User(int _id, string _username)
+        public int gameid;
+        public string gameusername;
+
+        public User(int _gameid, string _gameusername)
         {
-            id = _id;
-            username = _username;
+            gameid = _gameid;
+            gameusername = _gameusername;
+        }
+
+        public User(string _username, string _password)
+        {
+            Username = _username;
+            Password = _password;
+        }
+
+        public User()
+        {
+
         }
     }
 }

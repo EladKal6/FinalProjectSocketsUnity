@@ -11,14 +11,66 @@ namespace ServerManager
         {
             int _clientIdCheck = _packet.ReadInt();
             string _username = _packet.ReadString();
+            string _password = RSAEncryption.Decrypt(_packet.ReadString());
 
             if (_fromClient != _clientIdCheck)
             {
                 Console.WriteLine($"Player \"{_username}\" (ID: {_fromClient}) has assumed the wrong client ID ({_clientIdCheck})!");
+                ServerSend.LoginError(_fromClient, "You have assumed the wrong client ID");
+                return;
             }
+            int DBUserId = SqliteDataAccess.CheckLogin(_username, _password);
+            if (DBUserId == -888)
+            {
+                Console.WriteLine($"User with username {_username} is already logged in!");
+                ServerSend.LoginError(_fromClient, "This user is already logged in!");
+                return;
+            }
+            else if (DBUserId != -999)
+            {
+                ServerSend.LoginOk(_fromClient);
+                Console.WriteLine($"{Server.clients[_fromClient].tcp.socket.Client.RemoteEndPoint} connected successfully and is now player {_fromClient}.");
+                Server.clients[_fromClient].user = new User(_fromClient, _username);
+            }
+            else
+            {
+                ServerSend.LoginError(_fromClient, "Username or password are incorrect");
+                return;
+            }
+        }
 
-            Console.WriteLine($"{Server.clients[_fromClient].tcp.socket.Client.RemoteEndPoint} connected successfully and is now player {_fromClient}.");
-            Server.clients[_fromClient].user = new User(_fromClient, _username);
+        public static void SignUp(int _fromClient, Packet _packet)
+        {
+            string _email = _packet.ReadString();
+            string _username = _packet.ReadString();
+            string _password = RSAEncryption.Decrypt(_packet.ReadString());
+
+            Server.clients[_fromClient].user = new User(_username, _password);
+
+            Console.WriteLine($"SOMEONE TRIED TO SIGN UP HIS USERNAME {_username} HIS PASSWORD {_password}");
+
+            Server.clients[_fromClient].emailCode = new Random().Next(10000, 100000);
+            EmailVerification.SendEmail(_email, Server.clients[_fromClient].emailCode);
+        }
+
+        public static void EmailCode(int _fromClient, Packet _packet)
+        {
+            int _emailCode = _packet.ReadInt();
+
+            Console.WriteLine($"EMAIL VERIFICATION " + _emailCode);
+            if (SqliteDataAccess.IsExists(Server.clients[_fromClient].user.Username))
+            {
+                ServerSend.LoginError(_fromClient, "User with that username already exists, please try a different one");
+            }
+            else if (Server.clients[_fromClient].emailCode == _emailCode)
+            {
+                SqliteDataAccess.SaveUser(Server.clients[_fromClient].user);
+                ServerSend.LoginOk(_fromClient);
+            }
+            else
+            {
+                ServerSend.LoginError(_fromClient, "email Verification wrong");
+            }
         }
 
         public static void StartLobby(int _fromClient, Packet _packet)
@@ -59,7 +111,7 @@ namespace ServerManager
             {
                 if(client != null && client.id != _fromClient)
                 {
-                    ServerSend.PlayerjoinedLobby(client.id, Server.clients[_fromClient].user.username);
+                    ServerSend.PlayerjoinedLobby(client.id, Server.clients[_fromClient].user.gameusername);
                 }
             }
 
@@ -67,7 +119,7 @@ namespace ServerManager
             {
                 if(client != null)
                 {
-                    ServerSend.PlayerjoinedLobby(_fromClient, client.user.username);
+                    ServerSend.PlayerjoinedLobby(_fromClient, client.user.gameusername);
                 }
             }
         }
@@ -79,36 +131,56 @@ namespace ServerManager
 
         public static void SendIntoGame(int _fromClient, Packet _packet)
         {
-            foreach(Client client in Server.lobbies[_fromClient].clients)
+            int bestOf = (int)_packet.ReadFloat();
+
+            Console.WriteLine("bestOf: " + bestOf);
+            Server.StartGameServer(Server.lobbies[_fromClient].current, bestOf, false);
+
+            System.Threading.Thread.Sleep(6000);
+
+            if (Server.lobbies.ContainsKey(_fromClient)) // if false then user exited right after pressing "start game"
             {
-                if (client != null)
+                foreach (Client client in Server.lobbies[_fromClient].clients)
                 {
-                    ServerSend.SendIntoGame(client.id);
+                    if (client != null)
+                    {
+                        System.Threading.Thread.Sleep(1000);
+                        ServerSend.SendIntoGame(client.id);
+                    }
                 }
+
+                Server.currGameServerPort++;
             }
-            Server.lobbies.Remove(_fromClient);
+
+
         }
 
         public static void CloseLobby(int _fromClient, Packet _packet)
         {
-            foreach (Client client in Server.lobbies[_fromClient].clients)
+            if (Server.lobbies.ContainsKey(_fromClient))
             {
-                if (client != null && client.id != _fromClient)
+                foreach (Client client in Server.lobbies[_fromClient].clients)
                 {
-                    ServerSend.RemoveLobby(client.id);
+                    if (client != null && client.id != _fromClient)
+                    {
+                        ServerSend.RemoveLobby(client.id);
+                    }
                 }
+                Console.WriteLine($"Removed {Server.clients[_fromClient].user.gameusername}'s Lobby");
+                Server.lobbies.Remove(_fromClient);
             }
-            Console.WriteLine($"Removed {Server.clients[_fromClient].user.username}'s Lobby");
-            Server.lobbies.Remove(_fromClient);
         }
 
         public static void PlayerExitLobby(int _fromClient, Packet _packet)
         {
-            foreach (Client client in Server.lobbies[_fromClient].clients)
+            if (Server.lobbies.ContainsKey(_fromClient))
             {
-                if (client != null)
+                foreach (Client client in Server.lobbies[_fromClient].clients)
                 {
-                    ServerSend.PlayerDisconnectedLobby(client.id, Server.clients[_fromClient].user.username);
+                    if (client != null)
+                    {
+                        ServerSend.PlayerDisconnectedLobby(client.id, Server.clients[_fromClient].user.gameusername);
+                    }
                 }
             }
         }

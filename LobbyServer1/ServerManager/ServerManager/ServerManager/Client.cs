@@ -10,6 +10,7 @@ namespace ServerManager
         public static int dataBufferSize = 4096;
 
         public int id;
+        public int emailCode;
         public User user;
         public TCP tcp;
 
@@ -71,6 +72,7 @@ namespace ServerManager
                     int _byteLength = stream.EndRead(_result);
                     if (_byteLength <= 0)
                     {
+                        Console.WriteLine("byte length is zero tcp");
                         Server.clients[id].Disconnect();
                         return;
                     }
@@ -144,40 +146,48 @@ namespace ServerManager
             }
         }
 
-        private void Disconnect()
+        public void Disconnect()
         {
-            Console.WriteLine($"{tcp.socket.Client.RemoteEndPoint} has disconnected.");
+            try
+            {
+                Console.WriteLine($"{tcp.socket.Client.RemoteEndPoint} has disconnected.");
 
-            if (Server.lobbies.ContainsKey(id))
-            {
-                //kicks out everyone from the lobby
-                foreach (Client client in Server.lobbies[id].clients)
+                if (Server.lobbies.ContainsKey(id))
                 {
-                    if (client.id != id)
-                    {
-                        ServerSend.RemoveLobby(client.id);
-                    }
-                }
-                Server.lobbies.Remove(id);
-            }
-            
-            foreach (Lobby lobby in Server.lobbies.Values)
-            {
-                if (lobby.RemoveClient(id))
-                {
-                    foreach (Client client in lobby.clients)
+                    //kicks out everyone from the lobby
+                    foreach (Client client in Server.lobbies[id].clients)
                     {
                         if (client != null && client.id != id)
                         {
-                            ServerSend.PlayerDisconnectedLobby(client.id, Server.clients[id].user.username);
+                            ServerSend.RemoveLobby(client.id);
+                        }
+                    }
+                    Console.WriteLine($"Removed {Server.clients[id].user.gameusername}'s Lobby");
+                    Server.lobbies.Remove(id);
+                }
+
+                foreach (Lobby lobby in Server.lobbies.Values)
+                {
+                    if (lobby.RemoveClient(id))
+                    {
+                        foreach (Client client in lobby.clients)
+                        {
+                            if (client != null && client.id != id)
+                            {
+                                ServerSend.PlayerDisconnectedLobby(client.id, Server.clients[id].user.gameusername);
+                            }
                         }
                     }
                 }
+
+                user = null;
+
+                tcp.Disconnect();
             }
-
-            user = null;
-
-            tcp.Disconnect();
+            catch (Exception _ex)
+            {
+                Console.WriteLine("Error disconnecting " + _ex);
+            }
         }
     }
 }

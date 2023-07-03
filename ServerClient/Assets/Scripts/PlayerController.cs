@@ -4,6 +4,16 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+
+    public Transform camTransform;
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse0) && GameManager.instance.GetActiveMinigame() == "ShootingCity")
+        {
+            ClientSend.PlayerShoot(camTransform.forward);
+        }
+    }
     private void FixedUpdate()
     {
         SendInputToServer();

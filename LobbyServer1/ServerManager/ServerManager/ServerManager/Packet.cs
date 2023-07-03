@@ -9,6 +9,8 @@ namespace ServerManager
     public enum ServerManagerPackets
     {
         welcome = 100,
+        loginOk,
+        loginError,
         sendLobbies,
         SendIntoGame,
         sendJoinedPlayer,
@@ -20,6 +22,8 @@ namespace ServerManager
     public enum ClientPacketsLobby
     {
         welcomeReceived = 1,
+        signUp,
+        emailCode,
         requestLobbies,
         hostRequest,
         joinRequest,

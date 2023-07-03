@@ -11,8 +11,8 @@ public class Client : MonoBehaviour
     public static Client instance;
     public static int dataBufferSize = 4096;
 
-    public string ip = "127.0.0.1";
-    public int port = 26950;
+    public static string ip = "127.0.0.1";
+    public static int port = 26950;
     public int myId = 0;
     public TCP tcp;
     public UDP udp;
@@ -47,7 +47,6 @@ public class Client : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        Debug.Log(string.Join(Environment.NewLine, GameManager.obstacles));
         Disconnect();
     }
 
@@ -76,8 +75,8 @@ public class Client : MonoBehaviour
             };
 
             receiveBuffer = new byte[dataBufferSize];
-            Debug.Log("Begin Connect to port " + instance.port);
-            socket.BeginConnect(instance.ip, instance.port, ConnectCallback, socket);
+            Debug.Log("Begin Connect to port " + port + " and address " + ip);
+            socket.BeginConnect(ip, port, ConnectCallback, socket);
         }
 
         private void ConnectCallback(IAsyncResult _result)
@@ -103,6 +102,11 @@ public class Client : MonoBehaviour
                 if (socket != null)
                 {
                     stream.BeginWrite(_packet.ToArray(), 0, _packet.Length(), null, null);
+                    Debug.Log("Sent TCP Data!");
+                }
+                else
+                {
+                    Debug.Log("THE SOCKET IS NULL");
                 }
             }
             catch (Exception _ex)
@@ -199,7 +203,8 @@ public class Client : MonoBehaviour
 
         public UDP()
         {
-            endPoint = new IPEndPoint(IPAddress.Parse(instance.ip), instance.port);
+            Debug.Log("The ip the endpoint of the udp is " + ip + " and port " +  port);
+            endPoint = new IPEndPoint(IPAddress.Parse(ip), port);
         }
 
         public void Connect(int _localPort)
@@ -248,7 +253,7 @@ public class Client : MonoBehaviour
             }
             catch  (Exception _ex)
             {
-                Debug.LogError(_ex);
+                Debug.LogWarning(_ex);
                 instance.Disconnect();
             }
         }
@@ -286,6 +291,8 @@ public class Client : MonoBehaviour
         packetHandlers = new Dictionary<int, PacketHandler>()
         {
             { (int)ServerManagerPackets.welcome, ClientHandle.Welcome },
+            { (int)ServerManagerPackets.loginOk, ClientHandle.LoginOk },
+            { (int)ServerManagerPackets.loginError, ClientHandle.LoginError },
             { (int)ServerManagerPackets.sendLobbies, ClientHandle.UpdateLobbies },
             { (int)ServerManagerPackets.sendJoinedPlayer, ClientHandle.PlayerJoinedLobby },
             { (int)ServerManagerPackets.SendIntoGame, ClientHandle.SendIntoGame },
@@ -296,15 +303,23 @@ public class Client : MonoBehaviour
             { (int)GameServerPackets.playerPosition, ClientHandle.PlayerPosition },
             { (int)GameServerPackets.playerRotation, ClientHandle.PlayerRotation },
             { (int)GameServerPackets.PlayerDied, ClientHandle.PlayerDied },
+            { (int)GameServerPackets.PlayerRevived, ClientHandle.PlayerRevived },
+            { (int)GameServerPackets.startShootTimer, ClientHandle.StartShootTimer },
+            { (int)GameServerPackets.shotLine, ClientHandle.ShotLine },
+            { (int)GameServerPackets.playerHealth, ClientHandle.PlayerHealth },
+            { (int)GameServerPackets.startMinigame, ClientHandle.StartMinigame },
+            { (int)GameServerPackets.roundWinnerUsername, ClientHandle.RoundWinnerUsername },
             { (int)GameServerPackets.playerDisconnected, ClientHandle.PlayerDisconnected },
             { (int)GameServerPackets.spawnObstacle, ClientHandle.SpawnObstacle },
             { (int)GameServerPackets.obstaclePosition, ClientHandle.ObstaclePosition },
-            { (int)GameServerPackets.obstacleDestroyed, ClientHandle.ObstacleDestroyed }
+            { (int)GameServerPackets.obstacleDestroyed, ClientHandle.ObstacleDestroyed },
+            { (int)GameServerPackets.propDestroyed, ClientHandle.PropDestroyed },
+            { (int)GameServerPackets.gameFinished, ClientHandle.GameFinished }
         };
         Debug.Log("Initialized packets.");
     }
 
-    private void Disconnect()
+    public void Disconnect()
     {
         if (isConnected)
         {
@@ -351,16 +366,27 @@ public class Client : MonoBehaviour
         }
     }
 
-    public void SendIntoGame(int Gameport)
+    public void SendIntoGame(int GamePort)
     {
-            SceneManager.LoadScene("Game", LoadSceneMode.Single);
-            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            Debug.Log(Client.instance);
-            Debug.Log(Client.instance.tcp);
-            Debug.Log(Client.instance.tcp.socket);
-            Debug.Log(Client.instance.isConnected);
+        Disconnect();
 
+        port = GamePort;
 
-            Debug.Log(instance.port);
+        SceneManager.LoadScene("Game", LoadSceneMode.Single);
+    }
+
+    public void SendIntoMainMenu(int MenuPort)
+    {
+        StartCoroutine(ISendIntoMainMenu());
+    }
+
+    private IEnumerator ISendIntoMainMenu()
+    {
+        yield return new WaitForSeconds(6);
+
+        CameraController.ToggleCursorModeOn();
+
+        Disconnect();
+        SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
     }
 }

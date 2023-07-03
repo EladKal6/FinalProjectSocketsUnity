@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -10,15 +12,35 @@ public class UIManager : MonoBehaviour
     public GameObject entireMenu;
 
     public GameObject startMenu;
+    public GameObject SignUpVerificationMenu;
+    public InputField ServerAddressField;
     public InputField usernameField;
+    public InputField passwordField;
+    public InputField signUpEmailField;
+    public InputField signUpUsernameField;
+    public InputField signUpPasswordField;
+    public InputField emailCodeField;
 
     public GameObject LobbyMenu;
+    public GameObject backToLobbyMenu;
+    public GameObject ConnectButton;
+    public GameObject WrongUsernamePassword;
 
+    public Text winText;
+    public Text loseText;
+    public TextMeshPro shootTimer;
+    public TextMeshPro scoreboardTitle;
+    public TextMeshPro scoreboard;
+    public static string scoreboardstring;
+    public static string lastWinnerUsername;
+    public TextMeshPro winnerOverAll;
 
     public Text hostLobbyName;
     public GameObject PlayerBox;
     public GameObject HostPlayerList;
     public GameObject HostLobbyMenu;
+    public Slider BestOfSlider;
+    public Text BestOfText;
     public GameObject PlayerPlayerList;
 
     public GameObject lobbyBox;
@@ -44,9 +66,34 @@ public class UIManager : MonoBehaviour
 
     public void ConnectToServer()
     {
-        startMenu.SetActive(false);
-        usernameField.interactable = false;
+        PlayerManager.localPlayerUsername = usernameField.text;
+        if (ServerAddressField.text == "")
+        {
+            Client.ip = "127.0.0.1";
+        }
+        else
+        {
+            Client.ip = ServerAddressField.text;
+        }
         Client.instance.ConnectToServer();
+    }
+
+    public void SignUp()
+    {
+        if (ServerAddressField.text == "")
+        {
+            Client.ip = "127.0.0.1";
+        }
+        else
+        {
+            Client.ip = ServerAddressField.text;
+        }
+        Client.instance.ConnectToServer();
+    }
+
+    public void EmailCode()
+    {
+        ClientSend.EmailCode();
     }
 
     public void HostLobby()
@@ -91,9 +138,14 @@ public class UIManager : MonoBehaviour
     {
         GameObject newLobbyBox = Instantiate(lobbyBox, lobbyList.transform);
         newLobbyBox.transform.Find("LobbyName").GetComponent<Text>().text = lobbyName;
-        newLobbyBox.transform.Find("PlayersAmnt").GetComponent<Text>().text = maxAmnt + "/" + currentAmnt;
+        newLobbyBox.transform.Find("PlayersAmnt").GetComponent<Text>().text = currentAmnt + "/" + maxAmnt;
         newLobbyBox.GetComponent<Button>().onClick.AddListener(() => { JoinLobby(lobbyName); });
         newLobbyBox.SetActive(true);
+    }
+
+    public void ChangeValueBestOfText()
+    {
+        BestOfText.text = "Best Of: " + BestOfSlider.value;
     }
 
     public void JoinLobby(string _lobbyName)
@@ -165,5 +217,23 @@ public class UIManager : MonoBehaviour
         }
         RemoveAllPlayerBoxes();
         LobbyMenu.SetActive(true);
+    }
+
+    public void WinnerOverAll()
+    {
+        winnerOverAll.text = lastWinnerUsername + " WON THE GAME!";
+        scoreboard.gameObject.SetActive(false);
+        scoreboardTitle.gameObject.SetActive(false);
+        winnerOverAll.gameObject.SetActive(true);
+        StartCoroutine(AddExclamationMarks());
+    }
+
+    public IEnumerator AddExclamationMarks()
+    {
+        for (int i = 0; i < 20; i++)
+        {
+            yield return new WaitForSeconds(0.25f);
+            winnerOverAll.text += "!";
+        }
     }
 }

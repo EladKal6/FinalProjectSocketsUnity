@@ -241,6 +241,13 @@ public class Client
         {
             ServerSend.SpawnObstacleToPlayer(id, _obs);
         }
+
+        Server.currentPlayersAmnt++;
+        if (Server.currentPlayersAmnt == 1 && Server.alreadySentToGame == false)
+        {
+            Server.alreadySentToGame = true;
+            NetworkManager.instance.TimerTillStart();
+        }
     }
 
     /// <summary>Disconnects the client and stops all network traffic.</summary>
@@ -250,7 +257,10 @@ public class Client
 
         ThreadManager.ExecuteOnMainThread(() =>
         {
-            UnityEngine.Object.Destroy(player.gameObject);
+            if (player != null)
+            {
+                UnityEngine.Object.Destroy(player.gameObject);
+            }
             player = null;
         });
 
@@ -258,5 +268,17 @@ public class Client
         udp.Disconnect();
 
         ServerSend.PlayerDisconnected(id);
+
+        Server.currentPlayersAmnt--;
+
+        ThreadManager.ExecuteOnMainThread(() =>
+        {
+            if (Server.currentPlayersAmnt == 0)
+            {
+                Server.Stop();
+
+                Application.Quit();
+            }
+        });
     }
 }

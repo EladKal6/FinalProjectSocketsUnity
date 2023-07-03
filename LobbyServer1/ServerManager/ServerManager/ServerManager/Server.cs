@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -18,12 +19,13 @@ namespace ServerManager
 
         private static TcpListener tcpListener;
 
+        public static int currGameServerPort = 5556;
 
         public static int GetClientIDWithUsername(string _username)
         {
             foreach(int clientID in clients.Keys)
             {
-                if(clients[clientID].user != null && clients[clientID].user.username == _username)
+                if(clients[clientID].user != null && clients[clientID].user.gameusername == _username)
                 {
                     return clientID;
                 }
@@ -75,6 +77,8 @@ namespace ServerManager
             packetHandlers = new Dictionary<int, PacketHandler>()
             {
                 { (int)ClientPacketsLobby.welcomeReceived, ServerHandle.WelcomeReceived },
+                { (int)ClientPacketsLobby.signUp, ServerHandle.SignUp },
+                { (int)ClientPacketsLobby.emailCode, ServerHandle.EmailCode },
                 { (int)ClientPacketsLobby.requestLobbies, ServerHandle.RequestLobbies },
                 { (int)ClientPacketsLobby.hostRequest, ServerHandle.StartLobby },
                 { (int)ClientPacketsLobby.joinRequest, ServerHandle.JoinLobby },
@@ -83,6 +87,16 @@ namespace ServerManager
                 { (int)ClientPacketsLobby.playerExitLobby, ServerHandle.PlayerExitLobby },
             };
             Console.WriteLine("Initialized packets.");
+        }
+
+        public static void StartGameServer(int maxPlayers, int bestOf, bool debug)
+        {
+            string strCmdText;
+            Console.WriteLine("Current Directory: " + Environment.CurrentDirectory);
+            strCmdText = @"/C cd "+ Environment.CurrentDirectory +
+                    @"..\..\..\..\..\..\..\..\UnityGameServer\Build && " +
+                $"UnityGameServer.exe -port {currGameServerPort} -maxPlayers {maxPlayers} -bestOf {bestOf} -debug {debug}";
+            Process.Start("CMD.exe", strCmdText);
         }
     }
 }

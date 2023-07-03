@@ -11,9 +11,10 @@ namespace ServerManager
 
         static void Main(string[] args)
         {
-            Console.Title = "Game Server";
+            Console.Title = "Server Manager";
             isRunning = true;
-
+            RSAEncryption.Initialize();
+            Console.WriteLine(RSAEncryption.Decrypt(RSAEncryption.Encrypt("Helloworld")));
             Thread mainThread = new Thread(new ThreadStart(MainThread));
             mainThread.Start();
 

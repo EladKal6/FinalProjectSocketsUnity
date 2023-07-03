@@ -9,12 +9,17 @@ public class Server
 {
     public static int MaxPlayers { get; private set; }
     public static int Port { get; private set; }
+
     public static Dictionary<int, Client> clients = new Dictionary<int, Client>();
     public delegate void PacketHandler(int _fromClient, Packet _packet);
     public static Dictionary<int, PacketHandler> packetHandlers;
 
     private static TcpListener tcpListener;
     private static UdpClient udpListener;
+
+    public static int currentPlayersAmnt = 0;
+
+    public static bool alreadySentToGame = false;
 
     /// <summary>Starts the server.</summary>
     /// <param name="_maxPlayers">The maximum players that can be connected simultaneously.</param>
@@ -76,6 +81,7 @@ public class Server
 
                 if (_clientId == 0)
                 {
+                    Debug.Log("The Client ID is zero");
                     return;
                 }
 
@@ -129,6 +135,7 @@ public class Server
         {
             { (int)ClientPackets.welcomeReceived, ServerHandle.WelcomeReceived },
             { (int)ClientPackets.playerMovement, ServerHandle.PlayerMovement },
+            { (int)ClientPackets.playerShoot, ServerHandle.PlayerShoot }
         };
         Debug.Log("Initialized packets.");
     }

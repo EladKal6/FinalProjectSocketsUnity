@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ObstacleManager : MonoBehaviour
 {
@@ -15,7 +16,14 @@ public class ObstacleManager : MonoBehaviour
     public void Initialize(int _id, int _colorIndex)
     {
         id = _id;
-        CreateRandomColor(_colorIndex);
+        if (GameManager.instance.GetActiveMinigame() == "LavaFloor")
+        {
+            CreateRandomColor(2);
+        }
+        else if(GameManager.instance.GetActiveMinigame() != "Park")
+        {
+            CreateRandomColor(_colorIndex);
+        }
     }
 
     public void CreateRandomColor(int _colorIndex)
@@ -30,11 +38,28 @@ public class ObstacleManager : MonoBehaviour
         }
     }
 
-    public void Destroy(Vector3 _position)
+    public void Destroy(Vector3 _position, string obsType)
     {
         transform.position.Set(_position.x, _position.y, _position.z);
-        GameManager.obstacles.Remove(id);
-        Destroy(gameObject);
+
+        if (obsType == "Lava")
+        {
+            GameManager.lavas.Remove(id);
+        }
+        if (obsType == "squareObstacle")
+        {
+            GameManager.obstacles.Remove(id);
+        }
+        if (obsType == "MovingPlat")
+        {
+            GameManager.platforms.Remove(id);
+        }
+        if (obsType == "Anvil")
+        {
+            GameManager.platforms.Remove(id);
+        }
+
+        Destroy(this.gameObject);
     }
 
     public void ChangePosition(Vector3 _position)

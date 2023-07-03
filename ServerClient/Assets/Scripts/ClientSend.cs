@@ -22,8 +22,51 @@ public class ClientSend : MonoBehaviour
         using (Packet _packet = new Packet((int)ClientPacketsLobby.welcomeReceived))
         {
             _packet.Write(Client.instance.myId);
-            try {
-                _packet.Write(UIManager.instance.usernameField.text); //FIX
+            try
+            {
+                _packet.Write(PlayerManager.localPlayerUsername);
+                _packet.Write(RSAEncryption.Encrypt(Hash128.Compute(UIManager.instance.passwordField.text).ToString()));
+            }
+            catch
+            {
+                _packet.Write("PLAYER");
+                _packet.Write(RSAEncryption.Encrypt(Hash128.Compute(UIManager.instance.passwordField.text).ToString()));
+            }
+            SendTCPData(_packet);
+        }
+    }
+
+    public static void SignUp()
+    {
+        using (Packet _packet = new Packet((int)ClientPacketsLobby.signUp))
+        {
+            _packet.Write(UIManager.instance.signUpEmailField.text);
+            _packet.Write(UIManager.instance.signUpUsernameField.text);
+            _packet.Write(RSAEncryption.Encrypt(Hash128.Compute(UIManager.instance.signUpPasswordField.text).ToString()));
+
+            SendTCPData(_packet);
+        }
+    }
+
+    public static void EmailCode()
+    {
+        using (Packet _packet = new Packet((int)ClientPacketsLobby.emailCode))
+        {
+            _packet.Write(int.Parse(UIManager.instance.emailCodeField.text));
+
+
+            SendTCPData(_packet);
+        }
+    }
+
+    public static void GameWelcomeReceived()
+    {
+        using (Packet _packet = new Packet((int)ClientPacketsLobby.welcomeReceived))
+        {
+            _packet.Write(Client.instance.myId);
+            try
+            {
+                _packet.Write(PlayerManager.localPlayerUsername);
             }
             catch
             {
@@ -45,6 +88,16 @@ public class ClientSend : MonoBehaviour
             _packet.Write(GameManager.players[Client.instance.myId].transform.rotation);
 
             SendUDPData(_packet);
+        }
+    }
+
+    public static void PlayerShoot(Vector3 _facing)
+    {
+        using (Packet _packet = new Packet((int)ClientPacketsGame.playerShoot))
+        {
+            _packet.Write(_facing);
+
+            SendTCPData(_packet);
         }
     }
 
@@ -101,6 +154,8 @@ public class ClientSend : MonoBehaviour
     {
         using (Packet _packet = new Packet((int)ClientPacketsLobby.SendIntoGame))
         {
+            _packet.Write(UIManager.instance.BestOfSlider.value);
+
             SendTCPData(_packet);
         }
         Debug.Log("sent into game");

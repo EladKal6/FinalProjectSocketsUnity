@@ -12,23 +12,34 @@ public enum GameServerPackets
     playerPosition,
     playerRotation,
     PlayerDied,
+    PlayerRevived,
+    startShootTimer,
+    shotLine,
+    playerHealth,
+    startMinigame,
+    roundWinnerUsername,
     playerDisconnected,
     spawnObstacle,
     obstaclePosition,
-    obstacleDestroyed
+    obstacleDestroyed,
+    propDestroyed,
+    gameFinished
 }
 
 /// <summary>Sent from client to Game server.</summary>
 public enum ClientPacketsGame
 {
     welcomeRecieved = 1,
-    playerMovement
+    playerMovement,
+    playerShoot
 }
 
 /// <summary>Sent from server to client.</summary>
 public enum ServerManagerPackets
 {
     welcome = 100,
+    loginOk,
+    loginError,
     sendLobbies,
     SendIntoGame,
     sendJoinedPlayer,
@@ -40,6 +51,8 @@ public enum ServerManagerPackets
 public enum ClientPacketsLobby
 {
     welcomeReceived = 1,
+    signUp,
+    emailCode,
     requestLobbies,
     hostRequest,
     joinRequest,

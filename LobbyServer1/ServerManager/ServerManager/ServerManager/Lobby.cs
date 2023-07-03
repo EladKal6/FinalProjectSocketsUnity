@@ -46,7 +46,7 @@ namespace ServerManager
         {
             for (int i = 0; i < maxPlayers; i++)
             {
-                if (clients[i].id == clientId)
+                if (clients[i] != null && clients[i].id == clientId)
                 {
                     clients[i] = null;
                     current--;

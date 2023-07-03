@@ -39,6 +39,25 @@ namespace ServerManager
             {
                 _packet.Write(_msg);
                 _packet.Write(_toClient);
+                _packet.Write(RSAEncryption.GetPublicKeyString());
+
+                SendTCPData(_toClient, _packet);
+            }
+        }
+
+        public static void LoginOk(int _toClient)
+        {
+            using (Packet _packet = new Packet((int)ServerManagerPackets.loginOk))
+            {
+                SendTCPData(_toClient, _packet);
+            }
+        }
+
+        public static void LoginError(int _toClient, string _msg)
+        {
+            using (Packet _packet = new Packet((int)ServerManagerPackets.loginError))
+            {
+                _packet.Write(_msg);
 
                 SendTCPData(_toClient, _packet);
             }
@@ -94,6 +113,8 @@ namespace ServerManager
         {
             using (Packet _packet = new Packet((int)ServerManagerPackets.SendIntoGame))
             {
+                _packet.Write(Server.currGameServerPort);
+
                 SendTCPData(_toClient, _packet);
             }
         }

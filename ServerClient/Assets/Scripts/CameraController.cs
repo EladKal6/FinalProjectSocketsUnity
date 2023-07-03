@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public PlayerManager player;
+    public PlayerManager playerManager;
     public float sensitivity = 100f;
     public float clampAngle = 85f;
 
@@ -14,7 +14,12 @@ public class CameraController : MonoBehaviour
     private void Start()
     {
         verticalRotation = transform.localEulerAngles.x;
-        horizontalRotation = player.transform.eulerAngles.y;
+        horizontalRotation = playerManager.transform.eulerAngles.y;
+
+        foreach(PlayerManager player in GameManager.players.Values)
+        {
+            player.SetlocalPlayerCamera();
+        }
     }
 
     private void Update()
@@ -43,7 +48,7 @@ public class CameraController : MonoBehaviour
         verticalRotation = Mathf.Clamp(verticalRotation, -clampAngle, clampAngle);
 
         transform.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
-        player.transform.rotation = Quaternion.Euler(0f, horizontalRotation, 0f);
+        playerManager.transform.rotation = Quaternion.Euler(0f, horizontalRotation, 0f);
     }
 
     private void ToggleCursorMode()
@@ -57,5 +62,11 @@ public class CameraController : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.None;
         }
+    }
+
+    public static void ToggleCursorModeOn()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 }
