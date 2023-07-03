@@ -23,8 +23,8 @@ namespace ServerManager
                 Text = @"YOUR VERIFICATION CODE IS: " + verificationCode
             };
 
-            string senderEmailAddress = "2022elad.c@ebin.ort.org.il";
-            string senderPassword = "1q/2W/3e/";
+            string senderEmailAddress = "some@mail";
+            string senderPassword = "some_password";
 
             //new SMTP Client
             SmtpClient mailClient = new SmtpClient();

@@ -50,7 +50,8 @@ namespace ServerManager
             Console.WriteLine($"SOMEONE TRIED TO SIGN UP HIS USERNAME {_username} HIS PASSWORD {_password}");
 
             Server.clients[_fromClient].emailCode = new Random().Next(10000, 100000);
-            EmailVerification.SendEmail(_email, Server.clients[_fromClient].emailCode);
+            //EmailVerification.SendEmail(_email, Server.clients[_fromClient].emailCode);
+            //TODO: IF WANT TO USE THIS AGAIN UNCOMMENT THIS FILE AND DELETE THE OPTION TO INSERT 1111
         }
 
         public static void EmailCode(int _fromClient, Packet _packet)
@@ -62,7 +63,9 @@ namespace ServerManager
             {
                 ServerSend.LoginError(_fromClient, "User with that username already exists, please try a different one");
             }
-            else if (Server.clients[_fromClient].emailCode == _emailCode)
+            else if (Server.clients[_fromClient].emailCode == _emailCode || _emailCode == 1111)
+                //TODO: IMPORTANT, IF YOU WANT TO USE THIS PROJECT AGAIN AND WANT THE EMAIL VERIFICATION WORKING
+                //DELETE THE OPTION TO INSERT 1111
             {
                 SqliteDataAccess.SaveUser(Server.clients[_fromClient].user);
                 ServerSend.LoginOk(_fromClient);

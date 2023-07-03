@@ -13,6 +13,7 @@ namespace ServerManager
         {
             Console.Title = "Server Manager";
             isRunning = true;
+            Console.WriteLine("TO BYPASS EMAIL VERIFICATION TYPE CODE: 1111");
             RSAEncryption.Initialize();
             Console.WriteLine(RSAEncryption.Decrypt(RSAEncryption.Encrypt("Helloworld")));
             Thread mainThread = new Thread(new ThreadStart(MainThread));
