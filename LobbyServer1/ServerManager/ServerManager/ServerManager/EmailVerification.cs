@@ -12,7 +12,7 @@ namespace ServerManager
             //create a new message
             MimeMessage message = new MimeMessage();
             //sender info
-            message.From.Add(new MailboxAddress("MINIGAMES TOURNAMENT GAME", "2022elad.c@ebin.ort.org.il"));
+            message.From.Add(new MailboxAddress("MINIGAMES TOURNAMENT GAME", <enter mail here!!>));
             //receiver info
             message.To.Add(MailboxAddress.Parse(clientEmail));
             //message Title
@@ -23,8 +23,8 @@ namespace ServerManager
                 Text = @"YOUR VERIFICATION CODE IS: " + verificationCode
             };
 
-            string senderEmailAddress = "2022elad.c@ebin.ort.org.il";
-            string senderPassword = "1q/2W/3e/";
+            string senderEmailAddress = <enter mail here!!>;
+            string senderPassword = <enter the password of the mail here!!>;
 
             //new SMTP Client
             SmtpClient mailClient = new SmtpClient();
